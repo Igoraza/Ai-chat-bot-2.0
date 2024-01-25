@@ -22,13 +22,14 @@ class ChatListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ctrl.loadHistory();
-    print("Chathistory length : ${chatHistory.length}");
-    for (var category in CategoryList) {
-      String title = category.title!;
-      if (chatHistory.values.contains(title)) {
-        categoriesInChatHistory.add(category);
-      }
-    }
+    // print("Chathistory length : ${chatHistory.length}");
+    // for (var category in CategoryList) {
+    //   String title = category.title!;
+    //   if (chatHistory.values.contains(title)) {
+    //     categoriesInChatHistory.add(category);
+    //   }
+    // }
+    //
     return Scaffold(
         backgroundColor: AppColors.primaryBlack,
         appBar: AppBar(
@@ -53,13 +54,14 @@ class ChatListScreen extends StatelessWidget {
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
-            log("chathistory item ${chatHistoryBox.getAt(index).category}");
+            // log("chathistory item ${chatHistoryBox.getAt(index).category}");
             return ChatListCard(
-              model: chatHistory[index],
+              model: ctrl.categoriesHistory[index]['model'],
             );
           },
-          itemCount: chatHistory.length,
+          itemCount: ctrl.categoriesHistory.length,
         )
+
         // SingleChildScrollView(
         //   child: Column(
         //     children: [

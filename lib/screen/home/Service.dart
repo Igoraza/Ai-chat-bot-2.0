@@ -18,9 +18,9 @@ class ChatController extends GetxController {
   CategoryModel? SelectedCategory;
   List<ChatMessageModel> MessageList = [];
   String authToken = "";
-
+  List<Map<String, dynamic>> categoriesHistory = [];
   loadMessage() async {
-    Box bk = await Hive.openBox(SelectedCategory!.image!);
+    Box bk = await Hive.openBox(SelectedCategory!.title!);
 
     for (var data in bk.keys) {
       ChatMessageModel md = bk.get(data);
@@ -36,7 +36,7 @@ class ChatController extends GetxController {
     // chatHistory.add(categoryTitle);
     // final list = chatHistory.values.toList();
 
-    chatHistoryBox.put("${categoryModel.title}a", ChatHistoryModel(category: "${categoryModel.title!}", instance: 0));
+    chatHistoryBox.put("${categoryModel.title}", ChatHistoryModel(category: "${categoryModel.title!}", instance: 0));
     // final newchatHistory = await Hive.openBox("chat_history");
     log("Length of history ${chatHistoryBox.length}");
     log("values in chat history : ${chatHistoryBox.values}");
@@ -44,17 +44,52 @@ class ChatController extends GetxController {
 
   loadHistory() async {
     // final chatHistoryBox = await Hive.openBox<ChatHistoryModel>("chatHistory");
-    log(chatHistoryBox.getAt(2)!.category.toString());
+    // log(chatHistoryBox.getAt(2)!.category.toString());
+    List categoryTitles = [];
+    categoriesHistory.clear();
+    for (int i = 0; i < chatHistoryBox.length; i++) {
+      String title = chatHistoryBox.getAt(i).category;
+      String instance = chatHistoryBox.getAt(i).instance.toString();
+      log(title);
+      log(instance);
+      for (var category in CategoryList) {
+        String categoryTitle = category.title!;
+        // categoryTitles.add(title);
+        if (title == categoryTitle) {
+          var categoryInstance = {
+            'model': category,
+            'instance': instance,
+          };
+          if (categoriesHistory.isEmpty) {
+            log("null");
+            categoriesHistory = [categoryInstance];
+          } else {
+            log("not empty");
+            categoriesHistory.add(categoryInstance);
+          }
+
+          log("Categories history length :${categoriesHistory.length}");
+        }
+      }
+      log(categoriesHistory[0]['model'].toString());
+    }
+
+    // for (var category in CategoryList) {
+    //   String title = category.title!;
+    //   if (chatHistory.values.contains(title)) {
+    //     categoriesInChatHistory.add(category);
+    //   }
+    // }
   }
 
   AddMessage(String message, bool isUser) async {
     print("here");
     ChatMessageModel chatData = ChatMessageModel(DateTime.now().toString(), message, isUser, !isUser);
-    Box bk = await Hive.openBox(SelectedCategory!.image!);
+    Box bk = await Hive.openBox(SelectedCategory!.title!);
     bk.put(DateTime.now().toString(), chatData);
     MessageList.add(chatData);
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("LAST_MESG_${SelectedCategory!.image}", DateTime.now().toString());
+    preferences.setString("LAST_MESG_${SelectedCategory!.title}", DateTime.now().toString());
     loadLogs();
     autoDown();
     update();
@@ -73,7 +108,7 @@ class ChatController extends GetxController {
 
   logSession() async {
     ChatMessageModel chatData = ChatMessageModel(DateTime.now().toString(), "", false, false);
-    Box bk = await Hive.openBox(SelectedCategory!.image!);
+    Box bk = await Hive.openBox(SelectedCategory!.title!);
     bk.put(DateTime.now().toString(), chatData);
     loadLogs();
   }
@@ -87,7 +122,7 @@ class ChatController extends GetxController {
   loadLogs() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     for (var data in CategoryList) {
-      data.LastMessageTime = preferences.getString("LAST_MESG_${data.image}").toString();
+      data.LastMessageTime = preferences.getString("LAST_MESG_${data.title}").toString();
     }
 
     update();

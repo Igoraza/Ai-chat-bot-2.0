@@ -1,4 +1,5 @@
 import 'package:adapty_flutter/adapty_flutter.dart';
+import 'package:aichatbot/Constant/shared_pref_keys.dart';
 import 'package:aichatbot/screen/OnBoardingScreen.dart';
 import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
 import 'package:aichatbot/screen/home/Model/chatHistoryModel.dart';
@@ -33,9 +34,28 @@ void main() async {
     Hive.registerAdapter(ChatHistoryModelAdapter());
   }
   chatHistoryBox = await Hive.openBox<ChatHistoryModel>("chatHistory");
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  Name = preferences.getString("NAME").toString();
+  
   // chatHistory = await Hive.openBox("chat_history");
+  SharedPreferences sharedPref = await SharedPreferences.getInstance();
+  Name = sharedPref.getString("NAME").toString();
+  if (sharedPref.getInt(LANGEXPCURRENTINDEX) == null) {
+    sharedPref.setInt(LANGEXPCURRENTINDEX, 0);
+  }
+  if (sharedPref.getInt(RELCOACHCURRENTINDEX) == null) {
+    sharedPref.setInt(RELCOACHCURRENTINDEX, 0);
+  }
+  if (sharedPref.getInt(CARCOUNCELORCURRENTINDEX) == null) {
+    sharedPref.setInt(CARCOUNCELORCURRENTINDEX, 0);
+  }
+  if (sharedPref.getInt(PHILOSOPHERCURRENTINDEX) == null) {
+    sharedPref.setInt(PHILOSOPHERCURRENTINDEX, 0);
+  }
+  if (sharedPref.getInt(PERTRAINERCURRENTINDEX) == null) {
+    sharedPref.setInt(PERTRAINERCURRENTINDEX, 0);
+  }
+  if (sharedPref.getInt(TRAVELLERCURRENTINDEX) == null) {
+    sharedPref.setInt(TRAVELLERCURRENTINDEX, 0);
+  }
   try {
     Adapty.activate();
   } catch (e) {
