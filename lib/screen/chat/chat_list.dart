@@ -1,16 +1,34 @@
+import 'dart:developer';
+
 import 'package:aichatbot/Constant/colors.dart';
+import 'package:aichatbot/controllers/app_controller.dart';
+import 'package:aichatbot/main.dart';
 import 'package:aichatbot/screen/chat/chatlistCard.dart';
+import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
+import 'package:aichatbot/screen/home/Service.dart';
 import 'package:aichatbot/screen/home/home.dart';
 import 'package:aichatbot/screen/splash/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 
-class ChatListScreen extends StatelessWidget {
-  const ChatListScreen({super.key});
+List<CategoryModel> categoriesInChatHistory = [];
 
+class ChatListScreen extends StatelessWidget {
+  ChatListScreen({super.key});
+  AppController controller = Get.put(AppController());
+  ChatController ctrl = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
+    ctrl.loadHistory();
+    print("Chathistory length : ${chatHistory.length}");
+    for (var category in CategoryList) {
+      String title = category.title!;
+      if (chatHistory.values.contains(title)) {
+        categoriesInChatHistory.add(category);
+      }
+    }
     return Scaffold(
         backgroundColor: AppColors.primaryBlack,
         appBar: AppBar(
@@ -19,8 +37,8 @@ class ChatListScreen extends StatelessWidget {
             onTap: () {
               // when using Get.back, ChatController getting deleted
               // Get.back();
-              option = 0;
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+              // option = 0;
+              controller.setOption(0);
             },
             child: Icon(
               Icons.arrow_back,
@@ -33,12 +51,27 @@ class ChatListScreen extends StatelessWidget {
           ),
           backgroundColor: AppColors.primaryBlack,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              for (var data in CategoryList) SizedBox(width: MediaQuery.of(context).size.width, height: 100, child: ChatListCard(model: data)),
-            ],
-          ),
-        ));
+        body: ListView.builder(
+          itemBuilder: (context, index) {
+            log("chathistory item ${chatHistoryBox.getAt(index).category}");
+            return ChatListCard(
+              model: chatHistory[index],
+            );
+          },
+          itemCount: chatHistory.length,
+        )
+        // SingleChildScrollView(
+        //   child: Column(
+        //     children: [
+        //       for (var data in chatHistory)
+        //         SizedBox(
+        //           width: MediaQuery.of(context).size.width,
+        //           height: 100,
+        //           child: ChatListCard(model: data),
+        //         ),
+        //     ],
+        //   ),
+        // ),
+        );
   }
 }

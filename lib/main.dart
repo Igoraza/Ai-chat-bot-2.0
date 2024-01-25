@@ -1,5 +1,8 @@
 import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:aichatbot/screen/OnBoardingScreen.dart';
+import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
+import 'package:aichatbot/screen/home/Model/chatHistoryModel.dart';
+import 'package:aichatbot/screen/home/Model/chatHistoryModel.dart';
 import 'package:aichatbot/screen/home/Model/chatMessageModel.dart';
 import 'package:aichatbot/screen/home/home.dart';
 import 'package:aichatbot/screen/question/question.dart';
@@ -17,6 +20,8 @@ import 'screen/about/about.dart';
 import 'screen/chat/chat_list.dart';
 
 String Name = "";
+
+var chatHistoryBox;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,13 +29,19 @@ void main() async {
   if (!Hive.isAdapterRegistered(ChatMessageModelAdapter().typeId)) {
     Hive.registerAdapter(ChatMessageModelAdapter());
   }
+  if (!Hive.isAdapterRegistered(ChatHistoryModelAdapter().typeId)) {
+    Hive.registerAdapter(ChatHistoryModelAdapter());
+  }
+  chatHistoryBox = await Hive.openBox<ChatHistoryModel>("chatHistory");
   SharedPreferences preferences = await SharedPreferences.getInstance();
   Name = preferences.getString("NAME").toString();
+  // chatHistory = await Hive.openBox("chat_history");
   try {
     Adapty.activate();
   } catch (e) {
     print("adapty activation error :$e");
   }
+
   runApp(const MyApp());
 }
 

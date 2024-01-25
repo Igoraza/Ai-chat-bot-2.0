@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:aichatbot/main.dart';
 import 'package:aichatbot/screen/chat/chat.dart';
 import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
+import 'package:aichatbot/screen/home/Model/chatHistoryModel.dart';
 import 'package:aichatbot/screen/home/Model/chatMessageModel.dart';
 import 'package:aichatbot/screen/splash/splash.dart';
 import 'package:flutter/foundation.dart';
@@ -20,8 +24,27 @@ class ChatController extends GetxController {
 
     for (var data in bk.keys) {
       ChatMessageModel md = bk.get(data);
+
       MessageList.add(md);
     }
+    log(MessageList.toString());
+  }
+
+  addCategoryToChatHistory(CategoryModel categoryModel) async {
+    log("working.......");
+    
+    // chatHistory.add(categoryTitle);
+    // final list = chatHistory.values.toList();
+
+    chatHistoryBox.put("${categoryModel.title}a", ChatHistoryModel(category: "${categoryModel.title!}", instance: 0));
+    // final newchatHistory = await Hive.openBox("chat_history");
+    log("Length of history ${chatHistoryBox.length}");
+    log("values in chat history : ${chatHistoryBox.values}");
+  }
+
+  loadHistory() async {
+    // final chatHistoryBox = await Hive.openBox<ChatHistoryModel>("chatHistory");
+    log(chatHistoryBox.getAt(2)!.category.toString());
   }
 
   AddMessage(String message, bool isUser) async {
@@ -41,7 +64,7 @@ class ChatController extends GetxController {
     SelectedCategory = model;
     MessageList = [];
     // logSession();
-    
+
     update();
     loadMessage();
     Get.to(() => chat(), transition: Transition.topLevel);

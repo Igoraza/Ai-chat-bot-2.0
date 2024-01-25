@@ -3,6 +3,7 @@ import 'package:aichatbot/screen/chat/chat.dart';
 import 'package:aichatbot/screen/chat/chat_list.dart';
 import 'package:aichatbot/screen/chat/chat_start_screen.dart';
 import 'package:aichatbot/screen/chat/chatlistCard.dart';
+import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -10,14 +11,18 @@ import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
-class chatHome extends StatefulWidget {
-  const chatHome({super.key});
+class ChatHome extends StatefulWidget {
+  const ChatHome({
+    super.key,
+    required this.model,
+  });
 
+  final CategoryModel model;
   @override
-  State<chatHome> createState() => _chatHomeState();
+  State<ChatHome> createState() => _chatHomeState();
 }
 
-class _chatHomeState extends State<chatHome> {
+class _chatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     double ratio = MediaQuery.of(context).size.width / 384;
@@ -47,23 +52,15 @@ class _chatHomeState extends State<chatHome> {
                 fit: BoxFit.fill,
               )),
           Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: 14 * ratio, vertical: 22 * ratio),
+            padding: EdgeInsets.symmetric(horizontal: 14 * ratio, vertical: 22 * ratio),
             decoration: BoxDecoration(
                 border: Border.all(
                   color: Color(0xff5C628F),
                 ),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                    topRight: Radius.circular(20))),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20), topRight: Radius.circular(20))),
             child: Text(
               Stringchome,
-              style: TextStyle(
-                  color: Color.fromARGB(255, 109, 113, 143),
-                  fontFamily: "hk",
-                  fontSize: 14 * ratio,
-                  fontWeight: FontWeight.w400),
+              style: TextStyle(color: Color.fromARGB(255, 109, 113, 143), fontFamily: "hk", fontSize: 14 * ratio, fontWeight: FontWeight.w400),
             ),
           ),
           SizedBox(
@@ -73,20 +70,16 @@ class _chatHomeState extends State<chatHome> {
             onTap: () {
               // Navigator.of(context)
               //     .push(MaterialPageRoute(builder: (context) => chat()));
-              Get.to(() => ChatListScreen(),
-                  transition: Transition.downToUp,
-                  duration: Duration(milliseconds: 700));
+              // Get.to(() => ChatListScreen(), transition: Transition.downToUp, duration: Duration(milliseconds: 700));
+              ctrl.OpenChat(widget.model);
             },
             child: Container(
               width: 179 * ratio,
               height: 65 * ratio,
               alignment: Alignment.center,
               margin: EdgeInsets.symmetric(horizontal: 75 * ratio),
-              padding: EdgeInsets.symmetric(
-                  horizontal: 22 * ratio, vertical: 14 * ratio),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Color(0xff0B0F20)),
+              padding: EdgeInsets.symmetric(horizontal: 22 * ratio, vertical: 14 * ratio),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: Color(0xff0B0F20)),
               child: GradientText(
                 "Chat Now",
                 colors: [
@@ -95,10 +88,7 @@ class _chatHomeState extends State<chatHome> {
                   Color(0xff9979C8),
                   Color(0xff346BD6),
                 ],
-                style: TextStyle(
-                    fontSize: 20 * ratio,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: "Satoshi"),
+                style: TextStyle(fontSize: 20 * ratio, fontWeight: FontWeight.w700, fontFamily: "Satoshi"),
               ),
             ),
           ),

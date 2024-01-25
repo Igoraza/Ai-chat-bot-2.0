@@ -1,12 +1,15 @@
 import 'package:aichatbot/Constant/colors.dart';
+import 'package:aichatbot/controllers/app_controller.dart';
 import 'package:aichatbot/screen/chat/chat_list.dart';
+import 'package:aichatbot/screen/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 
 class ChatStartScreen extends StatelessWidget {
-  const ChatStartScreen({super.key});
-
+  ChatStartScreen({super.key});
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -71,7 +74,8 @@ class ChatStartScreen extends StatelessWidget {
               InkWell(
                 onTap: () {
                   // Get.to(ChatListScreen());
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => ChatListScreen())));
+                  // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => ChatListScreen())));
+                  controller.setOption(0);
                 },
                 child: Container(
                   decoration: BoxDecoration(

@@ -97,7 +97,7 @@ class _chatState extends State<chat> {
                 ),
               ),
               SizedBox(child: Image.asset('asset/image/Vector 121 (Stroke).png')),
-              if (false)
+              if (true)
                 SizedBox(
                   height: 14,
                   width: double.infinity,
@@ -109,29 +109,30 @@ class _chatState extends State<chat> {
               // Created ListView to Display components there ...!
               //Load Data from Components
               Positioned(
-                  top: 120 * ratio,
-                  left: 0 * ratio,
-                  right: 0 * ratio,
-                  bottom: 50 * ratio,
-                  child: ListView(
-                    controller: ctrl.scrollController,
-                    children: [
-                      //for (int i = 0; i < messageList.length; i++) messageList[i],
-                      for (var mess in ctrl.MessageList)
-                        if (mess.isUser!)
-                          personMessage(mess.Message!)
-                        else if (mess.isbot!)
-                          botMessage(mess.Message!)
-                        else
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(ctrl.findRelativeTime(mess.DateTime!, context), textAlign: TextAlign.center, style: TextStyle(color: Color(0xff5C628F), fontFamily: "hk")),
-                          ),
-                      SizedBox(
-                        height: 30 * ratio,
-                      )
-                    ],
-                  )),
+                top: 120 * ratio,
+                left: 0 * ratio,
+                right: 0 * ratio,
+                bottom: 50 * ratio,
+                child: ListView(
+                  controller: ctrl.scrollController,
+                  children: [
+                    //for (int i = 0; i < messageList.length; i++) messageList[i],
+                    for (var mess in ctrl.MessageList)
+                      if (mess.isUser!)
+                        personMessage(mess.Message!)
+                      else if (mess.isbot!)
+                        botMessage(mess.Message!)
+                      else
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Text(ctrl.findRelativeTime(mess.DateTime!, context), textAlign: TextAlign.center, style: TextStyle(color: Color(0xff5C628F), fontFamily: "hk")),
+                        ),
+                    SizedBox(
+                      height: 30 * ratio,
+                    )
+                  ],
+                ),
+              ),
 
               Positioned(
                   bottom: 0,
@@ -162,6 +163,7 @@ class _chatState extends State<chat> {
                                 child: TextField(
                                   controller: messageText,
                                   onSubmitted: (value) {
+                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!);
                                     sendMessage(value);
                                   },
                                   style: TextStyle(fontFamily: "hk", color: Colors.white54),
@@ -174,8 +176,9 @@ class _chatState extends State<chat> {
                               ),
                               InkWell(
                                 onTap: () {
+                                  print("adding to history");
+                                  ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!);
                                   sendMessage(messageText.text.trim());
-
                                   setState(() {
                                     messageText.text = "";
                                   });
