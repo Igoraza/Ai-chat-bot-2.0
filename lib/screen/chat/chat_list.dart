@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 
 List<CategoryModel> categoriesInChatHistory = [];
+ValueNotifier<int> deleteNotifier = ValueNotifier(0);
 
 class ChatListScreen extends StatelessWidget {
   ChatListScreen({super.key});
@@ -21,7 +22,7 @@ class ChatListScreen extends StatelessWidget {
   ChatController ctrl = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
-    ctrl.loadHistory();
+    // ctrl.loadHistory();
     // print("Chathistory length : ${chatHistory.length}");
     // for (var category in CategoryList) {
     //   String title = category.title!;
@@ -36,9 +37,6 @@ class ChatListScreen extends StatelessWidget {
           centerTitle: true,
           leading: InkWell(
             onTap: () {
-              // when using Get.back, ChatController getting deleted
-              // Get.back();
-              // option = 0;
               controller.setOption(0);
             },
             child: Icon(
@@ -52,15 +50,23 @@ class ChatListScreen extends StatelessWidget {
           ),
           backgroundColor: AppColors.primaryBlack,
         ),
-        body: ListView.builder(
-          itemBuilder: (context, index) {
-            // log("chathistory item ${chatHistoryBox.getAt(index).category}");
-            return ChatListCard(
-              model: ctrl.categoriesHistory[index]['model'],
-            );
-          },
-          itemCount: ctrl.categoriesHistory.length,
-        )
+        body: ValueListenableBuilder(
+            valueListenable: deleteNotifier,
+            builder: (context, value, _) {
+              ctrl.loadHistory();
+
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  // log("chathistory item ${chatHistoryBox.getAt(index).category}");
+                  return ChatListCard(
+                    model: ctrl.categoriesHistory[index]['model'],
+                    instance: int.parse(ctrl.categoriesHistory[index]['instance']),
+                    index: index,
+                  );
+                },
+                itemCount: ctrl.categoriesHistory.length,
+              );
+            })
 
         // SingleChildScrollView(
         //   child: Column(

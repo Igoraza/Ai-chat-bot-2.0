@@ -22,8 +22,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class chat extends StatefulWidget {
-  chat({super.key});
-
+  chat({super.key, this.newInstance = false});
+  final bool newInstance;
   @override
   State<chat> createState() => _chatState();
 }
@@ -162,8 +162,15 @@ class _chatState extends State<chat> {
                               Expanded(
                                 child: TextField(
                                   controller: messageText,
-                                  onSubmitted: (value) {
-                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!);
+                                  onSubmitted: (value) async {
+                                    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                                    int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
+                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
+                                    if (widget.newInstance) {
+                                      print("true");
+                                      instance++;
+                                    }
+                                    sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
                                     sendMessage(value);
                                   },
                                   style: TextStyle(fontFamily: "hk", color: Colors.white54),
@@ -175,9 +182,19 @@ class _chatState extends State<chat> {
                                 width: 8 * ratio,
                               ),
                               InkWell(
-                                onTap: () {
+                                onTap: () async {
                                   print("adding to history");
-                                  ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!);
+                                  SharedPreferences sharedPref = await SharedPreferences.getInstance();
+                                  int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
+                                  ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
+                                  if (widget.newInstance) {
+                                    print("true.......................");
+                                    instance++;
+                                  } else {
+                                    print("false............");
+                                  }
+
+                                  sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
                                   sendMessage(messageText.text.trim());
                                   setState(() {
                                     messageText.text = "";
@@ -220,7 +237,9 @@ class _chatState extends State<chat> {
 
     //scrollController.animateTo(scrollController.position.maxScrollExtent,
     // duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
-    ctrl.AddMessage(message, true);
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
+    ctrl.AddMessage(message, true, instance);
     ctrl.autoDown();
 
     try {
@@ -266,7 +285,7 @@ class _chatState extends State<chat> {
             final freeMessageCount = await sharedPref.getInt("freeMessageCount");
             sharedPref.setInt("freeMessageCount", (freeMessageCount! - 1));
             setState(() {
-              ctrl.AddMessage(data["message"], false);
+              ctrl.AddMessage(data["message"], false, instance);
             });
           } else {
             // Handle other cases if needed
@@ -281,7 +300,7 @@ class _chatState extends State<chat> {
       } else {
         print("User have no free messages");
         setState(() {
-          ctrl.AddMessage("Sorry... Your free messages are over. Please upgrade to premium!", false);
+          ctrl.AddMessage("Sorry... Your free messages are over. Please upgrade to premium!", false, instance);
         });
       }
     } catch (e) {

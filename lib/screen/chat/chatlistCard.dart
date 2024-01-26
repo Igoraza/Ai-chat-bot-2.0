@@ -1,3 +1,5 @@
+import 'package:aichatbot/main.dart';
+import 'package:aichatbot/screen/chat/chat_list.dart';
 import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
 import 'package:aichatbot/screen/home/Service.dart';
 import 'package:animate_do/animate_do.dart';
@@ -11,8 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatListCard extends StatelessWidget {
   CategoryModel model;
-
-  ChatListCard({super.key, required this.model});
+  int instance;
+  int index;
+  ChatListCard({super.key, required this.model, required this.instance, required this.index});
   ChatController ctrl = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
@@ -26,12 +29,14 @@ class ChatListCard extends StatelessWidget {
             foregroundColor: Colors.white,
             backgroundColor: Colors.red,
             onPressed: (context) async {
-              Box bx = await Hive.openBox(model.image!);
+              Box bx = await Hive.openBox("${model.title!}${instance}");
               bx.deleteFromDisk();
               model.LastMessageTime = "";
+              chatHistoryBox.deleteAt(index);
+              deleteNotifier.value = deleteNotifier.value + 1;
 
-              SharedPreferences preferences = await SharedPreferences.getInstance();
-              preferences.setString("LAST_MESG_${model!.image}", "");
+              // SharedPreferences preferences = await SharedPreferences.getInstance();
+              // preferences.setString("LAST_MESG_${model.title}${instance}", "");
               ctrl.update();
             },
           ),
@@ -41,7 +46,7 @@ class ChatListCard extends StatelessWidget {
         child: GetBuilder<ChatController>(builder: (_) {
           return InkWell(
             onTap: () {
-              ctrl.OpenChat(model);
+              ctrl.OpenChat(model, instance,false);
             },
             child: Container(
               child: Column(

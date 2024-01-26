@@ -19,8 +19,8 @@ class ChatController extends GetxController {
   List<ChatMessageModel> MessageList = [];
   String authToken = "";
   List<Map<String, dynamic>> categoriesHistory = [];
-  loadMessage() async {
-    Box bk = await Hive.openBox(SelectedCategory!.title!);
+  loadMessage(int instance) async {
+    Box bk = await Hive.openBox("${SelectedCategory!.title!}${instance + 1}");
 
     for (var data in bk.keys) {
       ChatMessageModel md = bk.get(data);
@@ -30,13 +30,11 @@ class ChatController extends GetxController {
     log(MessageList.toString());
   }
 
-  addCategoryToChatHistory(CategoryModel categoryModel) async {
-    log("working.......");
-    
+  addCategoryToChatHistory(CategoryModel categoryModel, int instance) async {
     // chatHistory.add(categoryTitle);
     // final list = chatHistory.values.toList();
 
-    chatHistoryBox.put("${categoryModel.title}", ChatHistoryModel(category: "${categoryModel.title!}", instance: 0));
+    chatHistoryBox.put("${SelectedCategory!.title!}${instance + 1}", ChatHistoryModel(category: "${categoryModel.title!}", instance: instance));
     // final newchatHistory = await Hive.openBox("chat_history");
     log("Length of history ${chatHistoryBox.length}");
     log("values in chat history : ${chatHistoryBox.values}");
@@ -56,10 +54,12 @@ class ChatController extends GetxController {
         String categoryTitle = category.title!;
         // categoryTitles.add(title);
         if (title == categoryTitle) {
+          // print("category testing : ${}");
           var categoryInstance = {
             'model': category,
             'instance': instance,
           };
+
           if (categoriesHistory.isEmpty) {
             log("null");
             categoriesHistory = [categoryInstance];
@@ -70,6 +70,9 @@ class ChatController extends GetxController {
 
           log("Categories history length :${categoriesHistory.length}");
         }
+      }
+      if (categoriesHistory.length != instance) {
+        // categoriesHistory.removeAt(categoriesHistory.length - 1);
       }
       log(categoriesHistory[0]['model'].toString());
     }
@@ -82,33 +85,44 @@ class ChatController extends GetxController {
     // }
   }
 
-  AddMessage(String message, bool isUser) async {
+  AddMessage(String message, bool isUser, int instance) async {
     print("here");
     ChatMessageModel chatData = ChatMessageModel(DateTime.now().toString(), message, isUser, !isUser);
-    Box bk = await Hive.openBox(SelectedCategory!.title!);
+    Box bk = await Hive.openBox("${SelectedCategory!.title!}${instance}");
     bk.put(DateTime.now().toString(), chatData);
     MessageList.add(chatData);
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("LAST_MESG_${SelectedCategory!.title}", DateTime.now().toString());
+    preferences.setString("LAST_MESG_${SelectedCategory!.title!}${instance}", DateTime.now().toString());
     loadLogs();
     autoDown();
     update();
   }
 
-  OpenChat(CategoryModel model) {
+  OpenChat(CategoryModel model, int instance, bool newInstance) {
+    print("open chat");
     SelectedCategory = model;
     MessageList = [];
     // logSession();
 
     update();
-    loadMessage();
-    Get.to(() => chat(), transition: Transition.topLevel);
+    loadMessage(instance);
+    Get.to(
+        () => chat(
+              newInstance: newInstance,
+            ),
+        transition: Transition.topLevel);
     autoDown();
   }
 
-  logSession() async {
+  // logSession(int instance) async {
+  //   ChatMessageModel chatData = ChatMessageModel(DateTime.now().toString(), "", false, false);
+  //   Box bk = await Hive.openBox("${SelectedCategory!.title!}");
+  //   bk.put(DateTime.now().toString(), chatData);
+  //   loadLogs();
+  // }
+  logSession(int instance) async {
     ChatMessageModel chatData = ChatMessageModel(DateTime.now().toString(), "", false, false);
-    Box bk = await Hive.openBox(SelectedCategory!.title!);
+    Box bk = await Hive.openBox("${SelectedCategory!.title!}${instance}");
     bk.put(DateTime.now().toString(), chatData);
     loadLogs();
   }
@@ -127,6 +141,14 @@ class ChatController extends GetxController {
 
     update();
   }
+  // loadLogs() async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   for (var data in categoriesHistory) {
+  //     data['model'].LastMessageTime = preferences.getString("LAST_MESG_${data['model'].title}").toString();
+  //   }
+
+  //   update();
+  // }
 
   String findRelativeTime(String time, BuildContext context) {
     RelativeDateTime _relativeDateTime = RelativeDateTime(dateTime: DateTime.now(), other: DateTime.parse(time));

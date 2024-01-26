@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:aichatbot/Constant/StringConst.dart';
+import 'package:aichatbot/controllers/app_controller.dart';
 import 'package:aichatbot/screen/chat/chat.dart';
 import 'package:aichatbot/screen/chat/chat_list.dart';
 import 'package:aichatbot/screen/chat/chat_start_screen.dart';
@@ -9,15 +12,17 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class ChatHome extends StatefulWidget {
-  const ChatHome({
+  ChatHome({
     super.key,
     required this.model,
   });
 
   final CategoryModel model;
+  AppController controller = Get.put(AppController());
   @override
   State<ChatHome> createState() => _chatHomeState();
 }
@@ -67,11 +72,18 @@ class _chatHomeState extends State<ChatHome> {
             height: 30 * ratio,
           ),
           InkWell(
-            onTap: () {
+            onTap: () async {
               // Navigator.of(context)
               //     .push(MaterialPageRoute(builder: (context) => chat()));
               // Get.to(() => ChatListScreen(), transition: Transition.downToUp, duration: Duration(milliseconds: 700));
-              ctrl.OpenChat(widget.model);
+              SharedPreferences sharedPref = await SharedPreferences.getInstance();
+              int instance = sharedPref.getInt(widget.model.title!)!;
+              log("category : ${widget.model.title!}");
+              log("instance : $instance");
+              await ctrl.OpenChat(widget.model, instance,true);
+              Future.delayed(Duration(milliseconds: 500), () {
+                widget.controller.setOption(0);
+              });
             },
             child: Container(
               width: 179 * ratio,

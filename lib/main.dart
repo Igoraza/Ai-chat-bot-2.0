@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:aichatbot/Constant/shared_pref_keys.dart';
 import 'package:aichatbot/screen/OnBoardingScreen.dart';
@@ -34,7 +36,7 @@ void main() async {
     Hive.registerAdapter(ChatHistoryModelAdapter());
   }
   chatHistoryBox = await Hive.openBox<ChatHistoryModel>("chatHistory");
-  
+
   // chatHistory = await Hive.openBox("chat_history");
   SharedPreferences sharedPref = await SharedPreferences.getInstance();
   Name = sharedPref.getString("NAME").toString();
@@ -56,6 +58,7 @@ void main() async {
   if (sharedPref.getInt(TRAVELLERCURRENTINDEX) == null) {
     sharedPref.setInt(TRAVELLERCURRENTINDEX, 0);
   }
+  log("instance:${sharedPref.getInt(LANGEXPCURRENTINDEX)}");
   try {
     Adapty.activate();
   } catch (e) {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:aichatbot/Constant/StringConst.dart';
+import 'package:aichatbot/Constant/shared_pref_keys.dart';
 import 'package:aichatbot/controllers/app_controller.dart';
 import 'package:aichatbot/screen/chat/chat_list.dart';
 import 'package:aichatbot/screen/chat/chat_start_screen.dart';
@@ -87,8 +88,10 @@ class HomeScreen extends StatelessWidget {
                                             onTap: () async {
                                               final SharedPreferences sharedPref = await SharedPreferences.getInstance();
                                               final haveHistory = sharedPref.getBool(HAVECHATHISTORY);
+                                              
+                                              int instance = sharedPref.getInt(data.title!)!;
                                               selectedModel = data;
-                                              haveHistory == true ? ctrl.OpenChat(data) : controller.setOption(3);
+                                              haveHistory == true ? ctrl.OpenChat(data, instance,true) : controller.setOption(3);
 
                                               print("have an his:$haveHistory");
                                             },
