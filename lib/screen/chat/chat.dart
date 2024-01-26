@@ -168,9 +168,9 @@ class _chatState extends State<chat> {
                                     ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
                                     if (widget.newInstance) {
                                       print("true");
+                                      sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
                                       instance++;
                                     }
-                                    sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
                                     sendMessage(value);
                                   },
                                   style: TextStyle(fontFamily: "hk", color: Colors.white54),
@@ -186,8 +186,8 @@ class _chatState extends State<chat> {
                                   print("adding to history");
                                   SharedPreferences sharedPref = await SharedPreferences.getInstance();
                                   int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
-                                  ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
                                   if (widget.newInstance) {
+                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
                                     print("true.......................");
                                     instance++;
                                   } else {
