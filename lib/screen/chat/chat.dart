@@ -23,7 +23,7 @@ import 'package:intl/intl.dart';
 
 class chat extends StatefulWidget {
   chat({super.key, this.newInstance = false});
-  final bool newInstance;
+  bool newInstance;
   @override
   State<chat> createState() => _chatState();
 }
@@ -41,6 +41,7 @@ class _chatState extends State<chat> {
     return Scaffold(
       body: GetBuilder<ChatController>(builder: (_) {
         log("... ${ctrl.SelectedCategory?.title} ");
+
         return Container(
           width: double.infinity,
           height: double.infinity,
@@ -116,20 +117,30 @@ class _chatState extends State<chat> {
                 child: ListView(
                   controller: ctrl.scrollController,
                   children: [
-                    //for (int i = 0; i < messageList.length; i++) messageList[i],
-                    for (var mess in ctrl.MessageList)
-                      if (mess.isUser!)
-                        personMessage(mess.Message!)
-                      else if (mess.isbot!)
-                        botMessage(mess.Message!)
-                      else
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Text(ctrl.findRelativeTime(mess.DateTime!, context), textAlign: TextAlign.center, style: TextStyle(color: Color(0xff5C628F), fontFamily: "hk")),
-                        ),
-                    SizedBox(
-                      height: 30 * ratio,
-                    )
+                    for (int i = 0; i < ctrl.MessageList.length; i++)
+                      // for (var mess in ctrl.MessageList)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (i % 2 == 0)
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              child: Text(ctrl.findRelativeTime(ctrl.MessageList[i].DateTime!, context), textAlign: TextAlign.center, style: TextStyle(color: Color(0xff5C628F), fontFamily: "hk")),
+                            ),
+                          if (ctrl.MessageList[i].isUser!)
+                            personMessage(ctrl.MessageList[i].Message!)
+                          else if (ctrl.MessageList[i].isbot!)
+                            botMessage(ctrl.MessageList[i].Message!)
+                          else
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              child: Text(ctrl.findRelativeTime(ctrl.MessageList[i].DateTime!, context), textAlign: TextAlign.center, style: TextStyle(color: Color(0xff5C628F), fontFamily: "hk")),
+                            ),
+                          SizedBox(
+                            height: 30 * ratio,
+                          )
+                        ],
+                      )
                   ],
                 ),
               ),
@@ -169,6 +180,7 @@ class _chatState extends State<chat> {
                                     if (widget.newInstance) {
                                       print("true");
                                       sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
+                                      widget.newInstance = false;
                                       instance++;
                                     }
                                     sendMessage(value);
@@ -188,6 +200,7 @@ class _chatState extends State<chat> {
                                   int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
                                   if (widget.newInstance) {
                                     ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
+                                    widget.newInstance = false;
                                     print("true.......................");
                                     instance++;
                                   } else {
