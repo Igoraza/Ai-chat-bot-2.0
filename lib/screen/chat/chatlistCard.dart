@@ -15,7 +15,8 @@ class ChatListCard extends StatelessWidget {
   CategoryModel model;
   int instance;
   int index;
-  ChatListCard({super.key, required this.model, required this.instance, required this.index});
+  String lastMessageTime;
+  ChatListCard({super.key, required this.model, required this.instance, required this.index, required this.lastMessageTime});
   ChatController ctrl = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
@@ -35,8 +36,8 @@ class ChatListCard extends StatelessWidget {
               chatHistoryBox.deleteAt(index);
               deleteNotifier.value = deleteNotifier.value + 1;
 
-              // SharedPreferences preferences = await SharedPreferences.getInstance();
-              // preferences.setString("LAST_MESG_${model.title}${instance}", "");
+              SharedPreferences preferences = await SharedPreferences.getInstance();
+              preferences.setString("LAST_MESG_${model.title}${instance}", "");
               ctrl.update();
             },
           ),
@@ -46,7 +47,7 @@ class ChatListCard extends StatelessWidget {
         child: GetBuilder<ChatController>(builder: (_) {
           return InkWell(
             onTap: () {
-              ctrl.OpenChat(model, instance,false);
+              ctrl.OpenChat(model, instance, false);
             },
             child: Container(
               child: Column(
@@ -60,12 +61,16 @@ class ChatListCard extends StatelessWidget {
                     //   ),
                     // ),
                     leading: Image.asset("asset/image/ChatCard/${model.image}.png"),
-                    trailing: (model.LastMessageTime == "" || model.LastMessageTime == "null")
-                        ? null
-                        : Text(
-                            ctrl.findRelativeTime(model.LastMessageTime!, context),
-                            style: TextStyle(fontSize: 10, color: Colors.white),
-                          ),
+                    // trailing: (model.LastMessageTime == "" || model.LastMessageTime == "null")
+                    //     ? null
+                    //     : Text(
+                    //         ctrl.findRelativeTime(model.LastMessageTime!, context),
+                    //         style: TextStyle(fontSize: 10, color: Colors.white),
+                    //       ),
+                    trailing: Text(
+                      ctrl.findRelativeTime(lastMessageTime, context),
+                      style: TextStyle(fontSize: 10, color: Colors.white),
+                    ),
                     title: Text(
                       "${model.title}",
                       style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: "Satoshi", fontWeight: FontWeight.w700),

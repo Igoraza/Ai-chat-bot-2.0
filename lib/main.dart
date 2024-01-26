@@ -25,6 +25,7 @@ import 'screen/chat/chat_list.dart';
 String Name = "";
 
 var chatHistoryBox;
+late SharedPreferences sharedPref;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -38,7 +39,7 @@ void main() async {
   chatHistoryBox = await Hive.openBox<ChatHistoryModel>("chatHistory");
 
   // chatHistory = await Hive.openBox("chat_history");
-  SharedPreferences sharedPref = await SharedPreferences.getInstance();
+  sharedPref = await SharedPreferences.getInstance();
   Name = sharedPref.getString("NAME").toString();
   if (sharedPref.getInt(LANGEXPCURRENTINDEX) == null) {
     sharedPref.setInt(LANGEXPCURRENTINDEX, 0);

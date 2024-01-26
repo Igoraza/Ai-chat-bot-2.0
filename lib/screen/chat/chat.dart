@@ -196,6 +196,7 @@ class _chatState extends State<chat> {
 
                                   sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
                                   sendMessage(messageText.text.trim());
+                                  // change time here
                                   setState(() {
                                     messageText.text = "";
                                   });

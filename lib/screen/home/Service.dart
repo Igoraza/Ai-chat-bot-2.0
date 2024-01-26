@@ -34,7 +34,7 @@ class ChatController extends GetxController {
     // chatHistory.add(categoryTitle);
     // final list = chatHistory.values.toList();
 
-    chatHistoryBox.put("${SelectedCategory!.title!}${instance + 1}", ChatHistoryModel(category: "${categoryModel.title!}", instance: instance));
+    chatHistoryBox.put("${SelectedCategory!.title!}${instance + 1}", ChatHistoryModel(category: "${categoryModel.title!}", instance: instance, lastMessageTime: DateTime.now().toString()));
     // final newchatHistory = await Hive.openBox("chat_history");
     log("Length of history ${chatHistoryBox.length}");
     log("values in chat history : ${chatHistoryBox.values}");
@@ -48,16 +48,20 @@ class ChatController extends GetxController {
     for (int i = 0; i < chatHistoryBox.length; i++) {
       String title = chatHistoryBox.getAt(i).category;
       String instance = chatHistoryBox.getAt(i).instance.toString();
+      String lastTime = chatHistoryBox.getAt(i).lastMessageTime.toString();
+
       log(title);
       log(instance);
       for (var category in CategoryList) {
         String categoryTitle = category.title!;
+
         // categoryTitles.add(title);
         if (title == categoryTitle) {
           // print("category testing : ${}");
           var categoryInstance = {
             'model': category,
             'instance': instance,
+            'lastMessageTime': lastTime,
           };
 
           if (categoriesHistory.isEmpty) {
@@ -69,6 +73,7 @@ class ChatController extends GetxController {
           }
 
           log("Categories history length :${categoriesHistory.length}");
+          log("last time :${lastTime}");
         }
       }
       if (categoriesHistory.length != instance) {
@@ -91,8 +96,8 @@ class ChatController extends GetxController {
     Box bk = await Hive.openBox("${SelectedCategory!.title!}${instance}");
     bk.put(DateTime.now().toString(), chatData);
     MessageList.add(chatData);
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("LAST_MESG_${SelectedCategory!.title!}${instance}", DateTime.now().toString());
+    // SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedPref.setString("LAST_MESG_${SelectedCategory!.title!}$instance", DateTime.now().toString());
     loadLogs();
     autoDown();
     update();
@@ -103,6 +108,7 @@ class ChatController extends GetxController {
     SelectedCategory = model;
     MessageList = [];
     // logSession();
+    chatHistoryBox.put("${model!.title!}${instance + 1}", ChatHistoryModel(category: "${model.title!}", instance: instance, lastMessageTime: DateTime.now().toString()));
 
     update();
     loadMessage(instance);
