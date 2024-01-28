@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:aichatbot/Constant/StringConst.dart';
 import 'package:aichatbot/Constant/shared_pref_keys.dart';
 import 'package:aichatbot/controllers/app_controller.dart';
+import 'package:aichatbot/main.dart';
 import 'package:aichatbot/screen/chat/chat_list.dart';
 import 'package:aichatbot/screen/chat/chat_start_screen.dart';
 import 'package:aichatbot/screen/home/Components/chatHome.dart';
@@ -29,8 +30,6 @@ class HomeScreen extends StatelessWidget {
 
   late CategoryModel selectedModel;
   List items = ["Education", "Career Councelor", "Relationship Coach", "Personal Trainer", "Traveller", "philosopher"];
-
-  late bool? haveChatHistory;
 
   List<double> sliderPosition = [35, 100, 200];
   ChatController ctrl = Get.put(ChatController());
@@ -88,10 +87,10 @@ class HomeScreen extends StatelessWidget {
                                             onTap: () async {
                                               final SharedPreferences sharedPref = await SharedPreferences.getInstance();
                                               final haveHistory = sharedPref.getBool(HAVECHATHISTORY);
-                                              
+
                                               int instance = sharedPref.getInt(data.title!)!;
                                               selectedModel = data;
-                                              haveHistory == true ? ctrl.OpenChat(data, instance,true) : controller.setOption(3);
+                                              haveHistory == true ? ctrl.OpenChat(data, instance, true) : controller.setOption(3);
 
                                               print("have an his:$haveHistory");
                                             },

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:adapty_flutter/adapty_flutter.dart';
+import 'package:aichatbot/Constant/StringConst.dart';
 import 'package:aichatbot/Constant/shared_pref_keys.dart';
 import 'package:aichatbot/screen/OnBoardingScreen.dart';
 import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
@@ -26,6 +27,7 @@ String Name = "";
 
 var chatHistoryBox;
 late SharedPreferences sharedPref;
+late bool? haveChatHistory;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -41,6 +43,7 @@ void main() async {
   // chatHistory = await Hive.openBox("chat_history");
   sharedPref = await SharedPreferences.getInstance();
   Name = sharedPref.getString("NAME").toString();
+  haveChatHistory = sharedPref.getBool(HAVECHATHISTORY);
   if (sharedPref.getInt(LANGEXPCURRENTINDEX) == null) {
     sharedPref.setInt(LANGEXPCURRENTINDEX, 0);
   }

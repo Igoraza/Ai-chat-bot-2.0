@@ -34,16 +34,15 @@ class ChatController extends GetxController {
     // chatHistory.add(categoryTitle);
     // final list = chatHistory.values.toList();
 
-    chatHistoryBox.put("${SelectedCategory!.title!}${instance + 1}", ChatHistoryModel(category: "${categoryModel.title!}", instance: instance, lastMessageTime: DateTime.now().toString()));
+    chatHistoryBox.add("${SelectedCategory!.title!}${instance + 1}", ChatHistoryModel(category: "${categoryModel.title!}", instance: instance, lastMessageTime: DateTime.now().toString()));
     // final newchatHistory = await Hive.openBox("chat_history");
     log("Length of history ${chatHistoryBox.length}");
     log("values in chat history : ${chatHistoryBox.values}");
   }
 
   loadHistory() async {
-    // final chatHistoryBox = await Hive.openBox<ChatHistoryModel>("chatHistory");
-    // log(chatHistoryBox.getAt(2)!.category.toString());
-    List categoryTitles = [];
+    print(chatHistoryBox);
+
     categoriesHistory.clear();
     for (int i = 0; i < chatHistoryBox.length; i++) {
       String title = chatHistoryBox.getAt(i).category;
@@ -55,9 +54,7 @@ class ChatController extends GetxController {
       for (var category in CategoryList) {
         String categoryTitle = category.title!;
 
-        // categoryTitles.add(title);
         if (title == categoryTitle) {
-          // print("category testing : ${}");
           var categoryInstance = {
             'model': category,
             'instance': instance,
@@ -71,23 +68,13 @@ class ChatController extends GetxController {
             log("not empty");
             categoriesHistory.add(categoryInstance);
           }
-
-          log("Categories history length :${categoriesHistory.length}");
-          log("last time :${lastTime}");
         }
       }
-      if (categoriesHistory.length != instance) {
-        // categoriesHistory.removeAt(categoriesHistory.length - 1);
-      }
-      log(categoriesHistory[0]['model'].toString());
-    }
 
-    // for (var category in CategoryList) {
-    //   String title = category.title!;
-    //   if (chatHistory.values.contains(title)) {
-    //     categoriesInChatHistory.add(category);
-    //   }
-    // }
+      // log(categoriesHistory[0]['model'].toString());
+    }
+    categoriesHistory.sort((a, b) => a['lastMessageTime'].compareTo(b['lastMessageTime']));
+    categoriesHistory = categoriesHistory.reversed.toList();
   }
 
   AddMessage(String message, bool isUser, int instance) async {

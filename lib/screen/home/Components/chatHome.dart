@@ -80,8 +80,8 @@ class _chatHomeState extends State<ChatHome> {
               int instance = sharedPref.getInt(widget.model.title!)!;
               log("category : ${widget.model.title!}");
               log("instance : $instance");
-             
-              await ctrl.OpenChat(widget.model, instance,true);
+
+              await ctrl.OpenChat(widget.model, instance, true);
               Future.delayed(Duration(milliseconds: 500), () {
                 widget.controller.setOption(0);
               });
