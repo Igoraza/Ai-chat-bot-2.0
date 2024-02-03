@@ -58,13 +58,14 @@ class ChatListScreen extends StatelessWidget {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   // log("chathistory item ${chatHistoryBox.getAt(index).category}");
-                  log("chathistory item ${ctrl.categoriesHistory[index]['lastMessageTime']}");
-                  log("chathistory time ${sharedPref.getString("${ctrl.categoriesHistory[index]['model']}${ctrl.categoriesHistory[index]['instance']}")}");
+                  // log("chathistory item ${ctrl.categoriesHistory[index]['lastMessageTime']}");
+                  // log("chathistory time ${sharedPref.getString("${ctrl.categoriesHistory[index]['model']}${ctrl.categoriesHistory[index]['instance']}")}");
                   return ChatListCard(
                     model: ctrl.categoriesHistory[index]['model'],
                     instance: int.parse(ctrl.categoriesHistory[index]['instance']),
                     index: index,
                     lastMessageTime: "${ctrl.categoriesHistory[index]['lastMessageTime']}",
+                    lastMessage: "${ctrl.categoriesHistory[index]['lastMessage']}",
                   );
                 },
                 itemCount: ctrl.categoriesHistory.length,

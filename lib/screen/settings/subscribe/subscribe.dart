@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:adapty_flutter/results/get_paywalls_result.dart';
 import 'package:aichatbot/screen/adapty/paywalls_screen.dart';
@@ -58,11 +60,14 @@ class _subscribeState extends State<subscribe> {
               GetPaywallsResult? paywallResult;
               callAdaptyMethod(() async {
                 paywallResult = await Adapty.getPaywalls();
+                // log("paywall result :${paywallResult}");
               }).then((value) {
                 if (value) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => subscription(),
+                      builder: (context) => Subscription(
+                        paywalls: paywallResult!.paywalls,
+                      ),
                     ),
                   );
                 } else {

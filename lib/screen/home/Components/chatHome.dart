@@ -78,10 +78,10 @@ class _chatHomeState extends State<ChatHome> {
               // Get.to(() => ChatListScreen(), transition: Transition.downToUp, duration: Duration(milliseconds: 700));
               SharedPreferences sharedPref = await SharedPreferences.getInstance();
               int instance = sharedPref.getInt(widget.model.title!)!;
-              log("category : ${widget.model.title!}");
-              log("instance : $instance");
+              // log("category : ${widget.model.title!}");
+              // log("instance : $instance");
 
-              await ctrl.OpenChat(widget.model, instance, true);
+              await ctrl.OpenChat(widget.model, instance, true, "chome");
               Future.delayed(Duration(milliseconds: 500), () {
                 widget.controller.setOption(0);
               });

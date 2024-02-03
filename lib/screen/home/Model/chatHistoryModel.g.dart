@@ -20,19 +20,22 @@ class ChatHistoryModelAdapter extends TypeAdapter<ChatHistoryModel> {
       category: fields[0] as String,
       instance: fields[1] as int,
       lastMessageTime: fields[2] as String,
+      lastMessage: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatHistoryModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.category)
       ..writeByte(1)
       ..write(obj.instance)
       ..writeByte(2)
-      ..write(obj.lastMessageTime);
+      ..write(obj.lastMessageTime)
+      ..writeByte(3)
+      ..write(obj.lastMessage);
   }
 
   @override

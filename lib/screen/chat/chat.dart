@@ -22,8 +22,9 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class chat extends StatefulWidget {
-  chat({super.key, this.newInstance = false});
+  chat({super.key, this.newInstance = false, required this.instance});
   bool newInstance;
+  int instance;
   @override
   State<chat> createState() => _chatState();
 }
@@ -175,15 +176,16 @@ class _chatState extends State<chat> {
                                   controller: messageText,
                                   onSubmitted: (value) async {
                                     SharedPreferences sharedPref = await SharedPreferences.getInstance();
-                                    int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
-                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
+                                    // int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
+                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, widget.instance, messageText.text);
                                     if (widget.newInstance) {
                                       print("true");
-                                      sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
+                                      sharedPref.setInt(ctrl.SelectedCategory!.title!, widget.instance);
                                       widget.newInstance = false;
-                                      instance++;
+                                      // instance++;
+                                      sharedPref.setInt(ctrl.SelectedCategory!.title!, widget.instance + 1)!;
                                     }
-                                    sendMessage(value);
+                                    sendMessage(value, widget.instance);
                                   },
                                   style: TextStyle(fontFamily: "hk", color: Colors.white54),
                                   maxLines: null,
@@ -199,16 +201,16 @@ class _chatState extends State<chat> {
                                   SharedPreferences sharedPref = await SharedPreferences.getInstance();
                                   int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
                                   if (widget.newInstance) {
-                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance);
+                                    ctrl.addCategoryToChatHistory(ctrl.SelectedCategory!, instance, messageText.text);
                                     widget.newInstance = false;
-                                    print("true.......................");
+                                    // print("true.......................");
                                     instance++;
                                   } else {
-                                    print("false............");
+                                    // print("false............");
                                   }
 
                                   sharedPref.setInt(ctrl.SelectedCategory!.title!, instance);
-                                  sendMessage(messageText.text.trim());
+                                  sendMessage(messageText.text.trim(), widget.instance);
                                   // change time here
                                   setState(() {
                                     messageText.text = "";
@@ -232,9 +234,14 @@ class _chatState extends State<chat> {
     );
   }
 
-  sendMessage(String message) async {
+  sendMessage(String message, int instance) async {
     messageList.add(personMessage(message));
-
+    log("messageeeeeeeeeee :: $message");
+    // SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    // int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
+    // log("message :: $message");
+    ctrl.AddMessage(message, true, instance);
+    ctrl.autoDown();
     final jsonResponse = jsonEncode(
       {
         "message": message,
@@ -247,31 +254,27 @@ class _chatState extends State<chat> {
       },
     );
     final messages = jsonDecode(jsonResponse);
-    log("messages : $messages");
-
+    // log("messages : $messages");
+    // print("message :: $messages['message']");
     //scrollController.animateTo(scrollController.position.maxScrollExtent,
     // duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    int instance = sharedPref.getInt(ctrl.SelectedCategory!.title!)!;
-    ctrl.AddMessage(message, true, instance);
-    ctrl.autoDown();
 
     try {
       final isUserHaveAccess = await verifyUserAccess();
 
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
-      log("history ${sharedPref.getBool(HAVECHATHISTORY)}");
+      // log("history ${sharedPref.getBool(HAVECHATHISTORY)}");
       final haveChatHistory = sharedPref.getBool(HAVECHATHISTORY);
       if (haveChatHistory == null) {
         sharedPref.setBool(HAVECHATHISTORY, true);
-        log("Set history");
+        // log("Set history");
       }
       if (isUserHaveAccess) {
-        log("verified");
+        // log("verified");
         final Request.Dio dio = Request.Dio();
         // log("Sending message");
         String token = (ctrl.authToken).toString();
-        log(token);
+        // log(token);
 
         final response = await dio.post(
           endpoint + "chat/message",
@@ -288,11 +291,11 @@ class _chatState extends State<chat> {
           },
         );
 
-        log(response.data.toString());
+        // log(response.data.toString());
         print(response.statusCode);
 
         if (response.statusCode == 200) {
-          log("success");
+          // log("success");
           var data = response.data;
           if (data["status"] == "success") {
             SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -312,7 +315,7 @@ class _chatState extends State<chat> {
           Get.offAll(() => Splash());
         }
       } else {
-        print("User have no free messages");
+        // print("User have no free messages");
         setState(() {
           ctrl.AddMessage("Sorry... Your free messages are over. Please upgrade to premium!", false, instance);
         });
@@ -324,29 +327,27 @@ class _chatState extends State<chat> {
   }
 
   verifyUserAccess() async {
-    log("verifying user");
+    // log("verifying user");
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
 
     final currentDate = DateTime.now();
 
-    print("subscribed ${sharedPref.getBool('isSubscribed')}");
+    // print("subscribed ${sharedPref.getBool('isSubscribed')}");
     if (sharedPref.getBool('isSubscribed') == true) {
-      log("sub user");
       return true;
     } else if (sharedPref.getString("refreshedDate") == null || sharedPref.getInt("freeMessageCount") == null) {
       sharedPref.setString('refreshedDate', DateTime.now().toString());
       sharedPref.setInt("freeMessageCount", 1);
-      log("else if");
+
       return true;
     } else {
-      log("else");
       final freeMessageCount = sharedPref.getInt("freeMessageCount");
       final refreshedDate = DateTime.parse(sharedPref.getString("refreshedDate")!);
       final dayDiff = currentDate.difference(refreshedDate).inDays;
-      print("refreshed date : $refreshedDate");
-      print("current date : $currentDate");
-      print("day diff $dayDiff");
-      print("free msg $freeMessageCount");
+      // print("refreshed date : $refreshedDate");
+      // print("current date : $currentDate");
+      // print("day diff $dayDiff");
+      // print("free msg $freeMessageCount");
       if (dayDiff > 7 || freeMessageCount! > 0) {
         sharedPref.setInt("freeMessageCount", 1);
         return true;

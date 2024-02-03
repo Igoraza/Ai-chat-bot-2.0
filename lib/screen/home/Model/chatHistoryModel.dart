@@ -8,6 +8,7 @@ class ChatHistoryModel {
     required this.category,
     required this.instance,
     required this.lastMessageTime,
+    required this.lastMessage,
   });
   @HiveField(0)
   String category;
@@ -15,4 +16,6 @@ class ChatHistoryModel {
   int instance;
   @HiveField(2)
   String lastMessageTime;
+  @HiveField(3)
+  String lastMessage;
 }

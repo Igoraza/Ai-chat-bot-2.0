@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:adapty_flutter/models/adapty_paywall.dart';
 import 'package:adapty_flutter/models/adapty_period.dart';
@@ -17,46 +19,49 @@ class _PaywallsScreenState extends State<PaywallsScreen> {
   @override
   Widget build(BuildContext context) {
     final paywalls = widget.paywalls;
+    // log(paywalls.toString());
     return Scaffold(
       body: (paywalls != null && paywalls.isNotEmpty)
           ? ListView.builder(
               itemCount: paywalls.length,
               itemBuilder: (ctx, index) {
                 final paywall = paywalls[index];
+                log("paywall producs:${paywall.products![0]}");
                 return Column(
                   children: [
                     Text("Choose plan"),
-                    if (paywall.products != null)
-                      ListView.builder(
-                        itemCount: paywall.products!.length,
-                        itemBuilder: (context, index) {
-                          final paywall = paywalls[index];
-                          final product = paywall.products![index];
-                          // final details = {
+                    // if (paywall.products != null)
+                    //   ListView.builder(
+                    //     itemCount: paywall.products!.length,
+                    //     itemBuilder: (context, index) {
+                    //       final paywall = paywalls[index];
+                    //       final product = paywall.products![index];
+                    //       print("Product : $product");
+                    //       // final details = {
 
-                          // }
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                // selectedItem = index;
-                              });
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ListTile(
-                                leading: Wrap(
-                                  children: [
-                                    // adaptyPeriodToString(product.subscriptionPeriod),
-                                    Text("data")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                    //       // }
+                    //       return GestureDetector(
+                    //         onTap: () {
+                    //           setState(() {
+                    //             // selectedItem = index;
+                    //           });
+                    //         },
+                    //         child: Card(
+                    //           shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(10),
+                    //           ),
+                    //           child: ListTile(
+                    //             leading: Wrap(
+                    //               children: [
+                    //                 // adaptyPeriodToString(product.subscriptionPeriod),
+                    //                 Text("data")
+                    //               ],
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
                     ElevatedButton(
                       onPressed: () async {
                         try {

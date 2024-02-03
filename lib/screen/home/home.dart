@@ -90,7 +90,7 @@ class HomeScreen extends StatelessWidget {
 
                                               int instance = sharedPref.getInt(data.title!)!;
                                               selectedModel = data;
-                                              haveHistory == true ? ctrl.OpenChat(data, instance, true) : controller.setOption(3);
+                                              haveHistory == true ? ctrl.OpenChat(data, instance, true, 'home') : controller.setOption(3);
 
                                               print("have an his:$haveHistory");
                                             },
