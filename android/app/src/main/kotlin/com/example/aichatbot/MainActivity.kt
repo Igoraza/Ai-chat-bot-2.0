@@ -1,4 +1,4 @@
-package com.example.aichatbot
+package chatgpt.smartchatbot.ai
 
 import io.flutter.embedding.android.FlutterActivity
 

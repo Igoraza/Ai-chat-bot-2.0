@@ -44,6 +44,9 @@ void main() async {
   sharedPref = await SharedPreferences.getInstance();
   Name = sharedPref.getString("NAME").toString();
   haveChatHistory = sharedPref.getBool(HAVECHATHISTORY);
+  if (sharedPref.getInt("freeMessageCount") == null) {
+    sharedPref.setInt("freeMessageCount", 1);
+  }
   if (sharedPref.getInt(LANGEXPCURRENTINDEX) == null) {
     sharedPref.setInt(LANGEXPCURRENTINDEX, 0);
   }
@@ -64,7 +67,7 @@ void main() async {
   }
   log("instance:${sharedPref.getInt(LANGEXPCURRENTINDEX)}");
   try {
-    Adapty.activate();
+    Adapty().activate();
   } catch (e) {
     print("adapty activation error :$e");
   }

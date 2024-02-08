@@ -16,6 +16,6 @@ class ChatHistoryModel {
   int instance;
   @HiveField(2)
   String lastMessageTime;
-  @HiveField(3)
+  @HiveField(3, defaultValue: "")
   String lastMessage;
 }
