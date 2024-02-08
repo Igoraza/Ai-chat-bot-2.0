@@ -58,7 +58,7 @@ class _chatState extends State<chat> {
     getFreeMessageCount();
     checkIsPremiumMember();
     if (freeMessageCountOfTheWeek == null) freeMessageCountOfTheWeek = 1;
-    if (isPremiumUser == null) isPremiumUser = false;
+    // if (isPremiumUser == null) isPremiumUser = false;
     return Scaffold(
       body: GetBuilder<ChatController>(
         builder: (_) {
@@ -184,7 +184,7 @@ class _chatState extends State<chat> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: isPremiumUser!
+              child: !isPremiumUser!
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
