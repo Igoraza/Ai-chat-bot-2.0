@@ -1,12 +1,80 @@
 import 'dart:developer';
 
 import 'package:adapty_flutter/adapty_flutter.dart';
-import 'package:adapty_flutter/results/get_paywalls_result.dart';
-import 'package:aichatbot/screen/adapty/paywalls_screen.dart';
+import 'package:adapty_ui_flutter/adapty_ui_flutter.dart';
+
 import 'package:aichatbot/screen/subscription/subscription.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class AdaptyObserver implements AdaptyUIObserver {
+  // Implement necessary methods here
+
+  @override
+  void paywallViewDidFailLoadingProducts(AdaptyUIView view, AdaptyError error) {
+    print("Failed product loading :${error}");
+  }
+
+  @override
+  void paywallViewDidFailPurchase(AdaptyUIView view, AdaptyPaywallProduct product, AdaptyError error) {
+    log(error.message);
+  }
+
+  @override
+  void paywallViewDidFailRendering(AdaptyUIView view, AdaptyError error) {
+    log("failed rendering:$error");
+  }
+
+  @override
+  void paywallViewDidFailRestore(AdaptyUIView view, AdaptyError error) {
+    log("failed restore:${error}");
+  }
+
+  @override
+  void paywallViewDidFinishPurchase(AdaptyUIView view, AdaptyPaywallProduct product, AdaptyProfile profile) async {
+    log("Finished purchase");
+
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    sharedPref.setBool('isSubscribed', true);
+  }
+
+  @override
+  void paywallViewDidFinishRestore(AdaptyUIView view, AdaptyProfile profile) async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    sharedPref.setBool('isSubscribed', true);
+  }
+
+  @override
+  void paywallViewDidSelectProduct(AdaptyUIView view, AdaptyPaywallProduct product) {
+    void paywallViewDidSelectProduct(AdaptyUIView view, AdaptyPaywallProduct product) {
+      log(product.toString());
+    }
+  }
+
+  @override
+  void paywallViewDidStartPurchase(AdaptyUIView view, AdaptyPaywallProduct product) {
+    log("Started purchase of $product");
+  }
+
+  @override
+  void paywallViewDidCancelPurchase(AdaptyUIView view, AdaptyPaywallProduct product) {
+    log("Canceled purchase of $product");
+  }
+
+  @override
+  void paywallViewDidPerformAction(AdaptyUIView view, AdaptyUIAction action) {
+    switch (action.type) {
+      case AdaptyUIActionType.close:
+        view.dismiss();
+        break;
+      default:
+        break;
+    }
+  }
+}
 
 class subscribe extends StatefulWidget {
   const subscribe({super.key});
@@ -17,10 +85,11 @@ class subscribe extends StatefulWidget {
 
 class _subscribeState extends State<subscribe> {
   bool loading = false;
+
   @override
   void initState() {
     try {
-      Adapty.activate();
+      Adapty().activate();
     } catch (e) {
       print(e);
     }
@@ -28,6 +97,7 @@ class _subscribeState extends State<subscribe> {
   }
 
   Future<bool> callAdaptyMethod(Function method) async {
+    log("message");
     bool success = true;
     setState(() {
       loading = true;
@@ -56,24 +126,22 @@ class _subscribeState extends State<subscribe> {
         Positioned(
           left: 20,
           child: InkWell(
-            onTap: () {
-              GetPaywallsResult? paywallResult;
-              callAdaptyMethod(() async {
-                paywallResult = await Adapty.getPaywalls();
-                // log("paywall result :${paywallResult}");
-              }).then((value) {
-                if (value) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Subscription(
-                        paywalls: paywallResult!.paywalls,
-                      ),
-                    ),
-                  );
-                } else {
-                  print("error");
-                }
-              });
+            onTap: () async {
+              AdaptyPaywall? paywall;
+              try {
+                paywall = await Adapty().getPaywall(placementId: "chatgpt.smartchatbot");
+                // paywall.printInfo();
+                // log("paywall: ${paywall}");
+                // Get.to(() => MainScreen());
+
+                final view = await AdaptyUI().createPaywallView(paywall: paywall, locale: "en");
+                AdaptyUI().addObserver(AdaptyObserver());
+
+                log(view.toString());
+                await view.present();
+              } catch (e) {
+                print("e:$e");
+              }
             },
             child: Image.asset('asset/image/Frame 3796_Subscribe.png'),
           ),

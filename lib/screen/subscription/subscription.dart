@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:adapty_flutter/adapty_flutter.dart';
-import 'package:adapty_flutter/models/adapty_paywall.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -11,8 +10,8 @@ import 'package:aichatbot/screen/subscription/featureBox.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class Subscription extends StatelessWidget {
-  Subscription({super.key, this.paywalls});
-  final List<AdaptyPaywall>? paywalls;
+  Subscription({super.key, this.paywall});
+  final AdaptyPaywall? paywall;
   late BuildContext context;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class Subscription extends StatelessWidget {
     this.context = context;
     double ratio = density(1);
     return Scaffold(
-        body: (paywalls != null && paywalls!.isNotEmpty)
+        body: (paywall != null)
             ? Container(
                 padding: EdgeInsets.only(left: density(20), right: density(20), top: density(100)),
                 width: double.infinity,
@@ -109,7 +108,7 @@ class Subscription extends StatelessWidget {
                           GestureDetector(
                             onTap: () async {
                               try {
-                                await Adapty.makePurchase(paywalls![0].products![0]);
+                                // await Adapty.makePurchase(paywalls![0].products![0]);
                               } catch (e) {
                                 print(e);
                               }
@@ -119,7 +118,7 @@ class Subscription extends StatelessWidget {
                           GestureDetector(
                             onTap: () async {
                               try {
-                                await Adapty.makePurchase(paywalls![0].products![1]);
+                                // await Adapty.makePurchase(paywalls![0].products![1]);
                               } catch (e) {
                                 print(e);
                               }
@@ -140,9 +139,9 @@ class Subscription extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           try {
-                            final product = await paywalls![0];
-                            log("paywall product:${product}");
-                            // await Adapty.makePurchase();
+                            // final product = await paywall[0];
+                            // log("paywall product:${product.products![0]}");
+                            // await Adapty.makePurchase(product.products![0]);
                           } catch (e) {
                             print(e);
                           }

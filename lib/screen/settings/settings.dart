@@ -26,6 +26,7 @@ class settings extends StatelessWidget {
             ),
           ),
           subscribe(),
+          // MainScreen(),
           SizedBox(
             height: 23 * ratio,
             width: double.infinity,

@@ -20,7 +20,7 @@ class ChatHistoryModelAdapter extends TypeAdapter<ChatHistoryModel> {
       category: fields[0] as String,
       instance: fields[1] as int,
       lastMessageTime: fields[2] as String,
-      lastMessage: fields[3] as String,
+      lastMessage: fields[3] == null ? '' : fields[3] as String,
     );
   }
 
