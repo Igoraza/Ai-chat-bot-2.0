@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:adapty_flutter/adapty_flutter.dart';
+import 'package:adapty_ui_flutter/adapty_ui_flutter.dart';
 import 'package:aichatbot/Constant/StringConst.dart';
 import 'package:aichatbot/Constant/shared_pref_keys.dart';
 import 'package:aichatbot/controllers/app_controller.dart';
+import 'package:aichatbot/helper/adapty_pusrchase.dart';
 import 'package:aichatbot/main.dart';
 import 'package:aichatbot/screen/chat/chat_list.dart';
 import 'package:aichatbot/screen/chat/chat_start_screen.dart';
@@ -11,6 +14,7 @@ import 'package:aichatbot/screen/home/Components/profilebar.dart';
 import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
 import 'package:aichatbot/screen/home/Service.dart';
 import 'package:aichatbot/screen/settings/settings.dart';
+import 'package:aichatbot/screen/settings/subscribe/subscribe.dart';
 import 'package:aichatbot/screen/splash/splash.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +68,12 @@ class HomeScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                Image.asset("asset/image/premiumCard.png"),
+                                GestureDetector(
+                                  onTap: () async {
+                                    AdaptyPurchaseHelper().startPurchase(context);
+                                  },
+                                  child: Image.asset("asset/image/premiumCard.png"),
+                                ),
                                 SizedBox(
                                   height: 40,
                                 ),

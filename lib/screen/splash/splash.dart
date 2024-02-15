@@ -17,7 +17,7 @@ class Splash extends StatelessWidget {
   const Splash({super.key});
 
   loadCategory(BuildContext context) async {
-    print("Loading categoru");
+    print("Loading");
     SharedPreferences pref = await SharedPreferences.getInstance();
     String token = pref.getString("TOKEN").toString();
 

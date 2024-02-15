@@ -5,6 +5,7 @@ import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:adapty_ui_flutter/adapty_ui_flutter.dart';
 import 'package:aichatbot/Constant/EndPoints.dart';
 import 'package:aichatbot/Constant/StringConst.dart';
+import 'package:aichatbot/helper/adapty_pusrchase.dart';
 import 'package:aichatbot/screen/chat/componets/botMessage.dart';
 import 'package:aichatbot/screen/chat/componets/get_premium_tile.dart';
 
@@ -195,21 +196,7 @@ class _chatState extends State<chat> {
                         SizedBox(width: 20),
                         GestureDetector(
                           onTap: () async {
-                            AdaptyPaywall? paywall;
-                            try {
-                              paywall = await Adapty().getPaywall(placementId: "chatgpt.smartchatbot");
-                              // paywall.printInfo();
-                              // log("paywall: ${paywall}");
-                              // Get.to(() => MainScreen());
-
-                              final view = await AdaptyUI().createPaywallView(paywall: paywall, locale: "en");
-                              AdaptyUI().addObserver(AdaptyObserver());
-
-                              log(view.toString());
-                              await view.present();
-                            } catch (e) {
-                              print("e:$e");
-                            }
+                            AdaptyPurchaseHelper().startPurchase(context);
                           },
                           child: GetPremiumTile(),
                         ),

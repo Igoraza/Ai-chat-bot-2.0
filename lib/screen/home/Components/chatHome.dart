@@ -1,12 +1,16 @@
 import 'dart:developer';
 
+import 'package:adapty_flutter/adapty_flutter.dart';
+import 'package:adapty_ui_flutter/adapty_ui_flutter.dart';
 import 'package:aichatbot/Constant/StringConst.dart';
 import 'package:aichatbot/controllers/app_controller.dart';
+import 'package:aichatbot/helper/adapty_pusrchase.dart';
 import 'package:aichatbot/screen/chat/chat.dart';
 import 'package:aichatbot/screen/chat/chat_list.dart';
 import 'package:aichatbot/screen/chat/chat_start_screen.dart';
 import 'package:aichatbot/screen/chat/chatlistCard.dart';
 import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
+import 'package:aichatbot/screen/settings/subscribe/subscribe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -108,7 +112,12 @@ class _chatHomeState extends State<ChatHome> {
           Container(
             padding: EdgeInsets.all(5 * ratio),
             margin: EdgeInsets.all(25 * ratio),
-            child: Image.asset("asset/image/getpreminum.JPG"),
+            child: GestureDetector(
+              onTap: () async {
+                AdaptyPurchaseHelper().startPurchase(context);
+              },
+              child: Image.asset("asset/image/getpreminum.JPG"),
+            ),
           )
         ],
       ),

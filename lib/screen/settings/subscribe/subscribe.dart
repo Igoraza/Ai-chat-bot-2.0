@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:adapty_ui_flutter/adapty_ui_flutter.dart';
+import 'package:aichatbot/helper/adapty_pusrchase.dart';
 
 import 'package:aichatbot/screen/subscription/subscription.dart';
 import 'package:flutter/material.dart';
@@ -126,22 +127,8 @@ class _subscribeState extends State<subscribe> {
         Positioned(
           left: 20,
           child: InkWell(
-            onTap: () async {
-              AdaptyPaywall? paywall;
-              try {
-                paywall = await Adapty().getPaywall(placementId: "chatgpt.smartchatbot");
-                // paywall.printInfo();
-                // log("paywall: ${paywall}");
-                // Get.to(() => MainScreen());
-
-                final view = await AdaptyUI().createPaywallView(paywall: paywall, locale: "en");
-                AdaptyUI().addObserver(AdaptyObserver());
-
-                log(view.toString());
-                await view.present();
-              } catch (e) {
-                print("e:$e");
-              }
+            onTap: () {
+              AdaptyPurchaseHelper().startPurchase(context);
             },
             child: Image.asset('asset/image/Frame 3796_Subscribe.png'),
           ),
