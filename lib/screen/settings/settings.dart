@@ -1,3 +1,4 @@
+import 'package:aichatbot/main.dart';
 import 'package:aichatbot/screen/about/about.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,6 +13,7 @@ class settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double ratio = MediaQuery.of(context).size.width / 384;
+    print(version);
     return Container(
       color: Color(0xff040A14),
       height: double.infinity,
@@ -35,7 +37,6 @@ class settings extends StatelessWidget {
             ),
           ),
           Container(
-            width: 335 * ratio,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               color: Color(0xff040A14),

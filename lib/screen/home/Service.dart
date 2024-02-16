@@ -31,19 +31,11 @@ class ChatController extends GetxController {
   }
 
   addCategoryToChatHistory(CategoryModel categoryModel, int instance, String lastMessage) async {
-    // chatHistory.add(categoryTitle);
-    // final list = chatHistory.values.toList();
-
     chatHistoryBox.put(
         "${SelectedCategory!.title!}${instance}", ChatHistoryModel(category: "${categoryModel.title!}", instance: instance, lastMessageTime: DateTime.now().toString(), lastMessage: lastMessage));
-    // final newchatHistory = await Hive.openBox("chat_history");
-    // log("Length of history ${chatHistoryBox.length}");
-    // log("values in chat history : ${chatHistoryBox.values}");
   }
 
   removeCategoryFromChatHistory(int index) {
-    // categoriesHistory.removeLast();
-
     print("length before delete:${categoriesHistory.length}");
     categoriesHistory.clear();
     print("length after delete:${categoriesHistory.length}");
@@ -59,8 +51,6 @@ class ChatController extends GetxController {
       String lastTime = chatHistoryBox.getAt(i).lastMessageTime.toString();
       String lastMessage = chatHistoryBox.getAt(i).lastMessage.toString();
 
-      // log(title);
-      // log(instance);
       for (var category in CategoryList) {
         String categoryTitle = category.title!;
 
@@ -101,7 +91,7 @@ class ChatController extends GetxController {
       chatHistoryBox.put(
           "${SelectedCategory!.title!}${instance}", ChatHistoryModel(category: "${SelectedCategory!.title!}", instance: instance, lastMessageTime: DateTime.now().toString(), lastMessage: message));
     }
-
+    typingEffect = true;
     loadLogs();
     autoDown();
     update();
@@ -110,19 +100,6 @@ class ChatController extends GetxController {
   OpenChat(CategoryModel model, int instance, bool newInstance, String lastMessage) {
     SelectedCategory = model;
     MessageList = [];
-    // String lastMessagee = "def";
-    // for (int i = 0; i < chatHistoryBox.length; i++) {
-    //   String title = chatHistoryBox.getAt(i).category;
-    //   String instanceInBox = chatHistoryBox.getAt(i).instance.toString();
-    //   // String lastTime = chatHistoryBox.getAt(i).lastMessageTime.toString();
-    //   // if (model.title == title && instance == instanceInBox) {
-    //   //   lastMessagee = chatHistoryBox.getAt(0).lastMessage.toString();
-    //   // }
-
-    //   //  lastMessagee = chatHistoryBox.getAt(i).lastMessage.toString();
-    // }
-    // logSession();
-    // chatHistoryBox.put("${model!.title!}${instance + 1}", ChatHistoryModel(category: "${model.title!}", instance: instance, lastMessageTime: DateTime.now().toString(), lastMessage: lastMessagee));
 
     update();
     loadMessage(instance);
@@ -135,12 +112,6 @@ class ChatController extends GetxController {
     autoDown();
   }
 
-  // logSession(int instance) async {
-  //   ChatMessageModel chatData = ChatMessageModel(DateTime.now().toString(), "", false, false);
-  //   Box bk = await Hive.openBox("${SelectedCategory!.title!}");
-  //   bk.put(DateTime.now().toString(), chatData);
-  //   loadLogs();
-  // }
   logSession(int instance) async {
     ChatMessageModel chatData = ChatMessageModel(DateTime.now().toString(), "", false, false);
     Box bk = await Hive.openBox("${SelectedCategory!.title!}${instance}");
@@ -162,14 +133,6 @@ class ChatController extends GetxController {
 
     update();
   }
-  // loadLogs() async {
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
-  //   for (var data in categoriesHistory) {
-  //     data['model'].LastMessageTime = preferences.getString("LAST_MESG_${data['model'].title}").toString();
-  //   }
-
-  //   update();
-  // }
 
   String findRelativeTime(String time, BuildContext context) {
     RelativeDateTime _relativeDateTime = RelativeDateTime(dateTime: DateTime.now(), other: DateTime.parse(time));

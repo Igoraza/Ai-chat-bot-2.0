@@ -117,6 +117,7 @@ class _subscribeState extends State<subscribe> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Stack(
       children: [
         Container(
@@ -124,13 +125,13 @@ class _subscribeState extends State<subscribe> {
           width: double.infinity,
           color: Color(0xff040A14),
         ),
-        Positioned(
-          left: 20,
-          child: InkWell(
-            onTap: () {
-              AdaptyPurchaseHelper().startPurchase(context);
-            },
-            child: Image.asset('asset/image/Frame 3796_Subscribe.png'),
+        InkWell(
+          onTap: () {
+            AdaptyPurchaseHelper().startPurchase(context);
+          },
+          child: SizedBox(
+            width: screenSize.width,
+            child: Image.asset('asset/image/subscribe_now_settings_page.png'),
           ),
         )
       ],

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:aichatbot/Constant/colors.dart';
 import 'package:aichatbot/controllers/app_controller.dart';
 import 'package:aichatbot/main.dart';
+import 'package:aichatbot/screen/chat/chat.dart';
 import 'package:aichatbot/screen/chat/chatlistCard.dart';
 import 'package:aichatbot/screen/home/Model/CategoryModel.dart';
 import 'package:aichatbot/screen/home/Service.dart';
@@ -22,6 +23,7 @@ class ChatListScreen extends StatelessWidget {
   ChatController ctrl = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
+    
     // ctrl.loadHistory();
     // print("Chathistory length : ${chatHistory.length}");
     // for (var category in CategoryList) {

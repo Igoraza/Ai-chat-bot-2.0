@@ -50,6 +50,8 @@ dependencies:
   http: ^1.1.0
   lit_relative_date_time: ^1.2.0
   loading_animation_widget: ^1.2.0+4
+  # package_info_plus: ^5.0.1
+
   shared_preferences: ^2.2.2
   type_text: ^1.0.5
 
@@ -109,6 +111,7 @@ flutter:
     - asset/image/
     - asset/image/homeCard/
     - asset/image/ChatCard/
+    - asset/image/subscribe_now_settings_page.png
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

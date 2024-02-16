@@ -28,6 +28,7 @@ String Name = "";
 var chatHistoryBox;
 late SharedPreferences sharedPref;
 late bool? haveChatHistory;
+String? version;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -71,6 +72,10 @@ void main() async {
   } catch (e) {
     print("adapty activation error :$e");
   }
+
+  // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  // version = packageInfo.version;
 
   runApp(const MyApp());
 }

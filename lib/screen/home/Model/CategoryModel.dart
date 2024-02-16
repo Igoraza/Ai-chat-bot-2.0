@@ -6,13 +6,14 @@ class CategoryModel {
   String? LastMessageTime;
   String? image;
 
-  CategoryModel(
-      {this.title,
-      this.description,
-      this.firstMessage,
-      this.categoryID,
-      this.image,
-      this.LastMessageTime = ""});
+  CategoryModel({
+    this.title,
+    this.description,
+    this.firstMessage,
+    this.categoryID,
+    this.image,
+    this.LastMessageTime = "",
+  });
 
   CategoryModel.fromJson(Map<String, dynamic> json) {
     title = json['title'];

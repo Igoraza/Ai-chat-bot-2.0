@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:type_text/type_text.dart';
 
-botMessage(String message) {
+botMessage(String message, bool typingEffect) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -22,19 +22,17 @@ botMessage(String message) {
             border: Border.all(
               color: Color(0xff5C628F),
             ),
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-                topRight: Radius.circular(20))),
-        child: TypeText(
-          "$message",
-          duration: Duration(milliseconds: 15 * message.length),
-          style: TextStyle(
-              color: Color.fromARGB(255, 109, 113, 143),
-              fontFamily: "hk",
-              fontSize: 14,
-              fontWeight: FontWeight.w400),
-        ),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20), topRight: Radius.circular(20))),
+        child: typingEffect
+            ? TypeText(
+                "$message",
+                duration: Duration(milliseconds: 15 * message.length),
+                style: TextStyle(color: Color.fromARGB(255, 109, 113, 143), fontFamily: "hk", fontSize: 14, fontWeight: FontWeight.w400),
+              )
+            : Text(
+                "$message",
+                style: TextStyle(color: Color.fromARGB(255, 109, 113, 143), fontFamily: "hk", fontSize: 14, fontWeight: FontWeight.w400),
+              ),
       ),
     ],
   );

@@ -10,14 +10,20 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.primaryBlack,
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back,
-          color: AppColors.primaryWhite,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: AppColors.primaryWhite,
+          ),
         ),
         title: Text(
           "About Us",
           style: TextStyle(color: AppColors.primaryWhite),
         ),
+        centerTitle: true,
         backgroundColor: AppColors.primaryBlack,
       ),
       body: Column(
